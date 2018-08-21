@@ -94,8 +94,8 @@ if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.
 
 // Gather files ending with junction
    junctions = Channel
-    .fromPath( params.input_folder+'/*junction')
-    .map {  path -> [ path.name.replace("STAR.","").replace(".Chimeric.SJ.out.junction",""), path ] }
+    .fromPath( params.input_folder+'/*' +params.junction_suffix)
+    .map {  path -> [ path.name.replace("STAR.","").replace(".${params.junction_suffix}",""), path ] }
 
 // Match the pairs on two channels having the same 'key' (name) and emit a new pair containing the expected files
    input_triplet = reads1
@@ -104,7 +104,7 @@ if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.
 
    input_triplet = input_triplet.phase(junctions)
    input_triplet = input_triplet
-		     .map { pairs, junction -> [ pairs[1], pairs[2], junction[1] ] }
+		     .map { pairs, junction -> [ pairs[0],pairs[1], pairs[2], junction[1] ] }
 
 }else{
        println "ERROR: input folder contains no fastq files"; System.exit(1)
@@ -116,16 +116,15 @@ process STAR_Fusion {
 	tag { file_tag }
 
 	input:
-	set pair1, pair2 , junction from input_triplet
+	set file_tag, pair1, pair2 , junction from input_triplet
 	
 	output:
-	file("*") into outputs
+	file("FusionInspector*") into FIoutputs
+	file("star-fusion*") into SFoutputs
 
 	publishDir "${params.output_folder}/${file_tag}", mode: 'copy'	
 
 	shell:
-	file_tag=pair1[0].baseName
-
     	'''
 	STAR-Fusion --genome_lib_dir !{params.CTAT_folder} -J !{junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct
     	'''
