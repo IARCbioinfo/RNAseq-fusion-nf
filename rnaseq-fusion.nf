@@ -26,8 +26,6 @@ params.suffix1 = "_1"
 params.suffix2 = "_2"
 params.junction_suffix = "Chimeric.SJ.out.junction"
 
-params.twopass  = null
-
 params.help = null
 
 log.info ""
@@ -49,13 +47,17 @@ if (params.help) {
     log.info "nextflow run iarcbioinfo/rnaseq-transcript-nf [-with-docker] [OPTIONS]"
     log.info ""
     log.info "Mandatory arguments:"
-    log.info '    --input_folder   FOLDER                  Folder containing fastq files and STAR junction files.'
+    log.info '    --input_folder    FOLDER                  Folder containing fastq files and STAR junction files.'
     log.info '    --CTAT_folder     FOLDER                  Folder with STAR-Fusion bundle (CTAT).'
     log.info ""
     log.info "Optional arguments:"
-    log.info '    --output_folder     STRING                Output folder (default: results_fusion).'
-    log.info '    --cpu          INTEGER                 Number of cpu used by bwa mem and sambamba (default: 2).'
-    log.info '    --mem          INTEGER                 Size of memory used for mapping (in GB) (default: 2).' 
+    log.info '    --output_folder   STRING                  Output folder (default: results_fusion).'
+    log.info '    --fastq_ext       STRING                  Extension of fastq files (default: fq.gz).'
+    log.info '    --suffix1         STRING                  Suffix of 1st element of fastq files pair (default: _1).'
+    log.info '    --suffix2         STRING                  Suffix of 2nd element of fastq files pair (default: _2).'
+    log.info '    --junction_suffix STRING                  Suffix of STAR chimeric junction files (default: Chimeric.SJ.out.junction).'
+    log.info '    --cpu             INTEGER                 Number of cpu used by bwa mem and sambamba (default: 2).'
+    log.info '    --mem             INTEGER                 Size of memory used for mapping (in GB) (default: 2).' 
     log.info ""
     log.info "Flags:"
     log.info "--<FLAG>                                                    <DESCRIPTION>"
@@ -63,22 +65,20 @@ if (params.help) {
     exit 0
 } else {
 /* Software information */
-   log.info "input_folder = ${params.input_folder}"
-   log.info "cpu          = ${params.cpu}"
-   log.info "mem          = ${params.mem}"
-   log.info "output_folder= ${params.output_folder}"
-   log.info "help:                               ${params.help}"
+   log.info "input_folder    = ${params.input_folder}"
+   log.info "cpu             = ${params.cpu}"
+   log.info "mem             = ${params.mem}"
+   log.info "output_folder   = ${params.output_folder}"
+   log.info "CTAT_folder     = ${params.CTAT_folder}"
+   log.info "fastq_ext       = ${params.fastq_ext}"
+   log.info "suffix1         = ${params.suffix1}"
+   log.info "suffix2         = ${params.suffix2}"
+   log.info "junction_suffix = ${params.junction_suffix}"
+   log.info "help:             ${params.help}"
 }
-
-file(params.input_folder).listFiles().println()
 
 if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.size() > 0){
        println "Junction files found, proceed with fusion genes discovery"
-
-//test1 = Channel
-//    .fromPath( params.input_folder )
-//    .println()
-
 
 // Gather files ending with _1 suffix
    reads1 = Channel
@@ -92,47 +92,23 @@ if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.
     .map {  path -> [ path.name.replace("${params.suffix2}.${params.fastq_ext}",""), path ] }
 
 
-//   Channel
-//	.fromPath(params.input_folder+'/*junction' )
-//	.set{ test}
-//   test.println()
 // Gather files ending with junction
    junctions = Channel
     .fromPath( params.input_folder+'/*junction')
     .map {  path -> [ path.name.replace("STAR.","").replace(".Chimeric.SJ.out.junction",""), path ] }
-//    .view()
-//    .println()
-//    .map {  path -> [ path.name.replace("STAR.",""), path ] }
-//    .println()
 
 // Match the pairs on two channels having the same 'key' (name) and emit a new pair containing the expected files
    input_triplet = reads1
                      .phase(reads2)
 		     .map { pair1, pair2 -> [pair1[0], pair1[1], pair2[1] ] }
- //   		     .view()
-
 
    input_triplet = input_triplet.phase(junctions)
-//				.view()
-//		     .map { pairs,  -> [ pair1[1], pair2[1] ] }
    input_triplet = input_triplet
 		     .map { pairs, junction -> [ pairs[1], pairs[2], junction[1] ] }
-//		     .view()
-//input_triplet = input_triplet.view()
 
-
-//       fastq_files      = Channel.fromFilePairs( params.input_folder+'/*{1.fq.gz,2.fq.gz,junction}')
-// 				 .println()
-//	keys1 = file(params.input_folder).listFiles().findAll { it.name ==~ /.*${params.suffix1}.${params.fastq_ext}/ }.collect { it.getName() }
-//		   			.collect { it.replace("${params.suffix1}.${params.fastq_ext}",'') }
-//
-//	junction_files   = Channel.fromFilePairs( params.input_folder+'/*{1.fq.gz,junction}')
-//				 .println()
 }else{
        println "ERROR: input folder contains no fastq files"; System.exit(1)
 }
-
-println input_triplet
 
 process STAR_Fusion {
 	cpus params.cpu
@@ -154,4 +130,3 @@ process STAR_Fusion {
 	STAR-Fusion --genome_lib_dir !{params.CTAT_folder} -J !{junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct
     	'''
 }
-
