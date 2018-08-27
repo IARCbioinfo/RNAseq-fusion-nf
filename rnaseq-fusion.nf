@@ -91,7 +91,6 @@ if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.
     .fromPath( params.input_folder+'/*'+params.suffix2+'.'+params.fastq_ext )
     .map {  path -> [ path.name.replace("${params.suffix2}.${params.fastq_ext}",""), path ] }
 
-
 // Gather files ending with junction
    junctions = Channel
     .fromPath( params.input_folder+'/*' +params.junction_suffix)
@@ -106,6 +105,7 @@ if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.
    input_triplet = input_triplet
 		     .map { pairs, junction -> [ pairs[0],pairs[1], pairs[2], junction[1] ] }
 
+
 }else{
        println "ERROR: input folder contains no fastq files"; System.exit(1)
 }
@@ -116,7 +116,7 @@ process STAR_Fusion {
 	tag { file_tag }
 
 	input:
-	set file_tag, pair1, pair2 , junction from input_triplet
+	set file_tag, file(pair1), file(pair2) , file(junction) from input_triplet
 	
 	output:
 	file("FusionInspector*") into FIoutputs
