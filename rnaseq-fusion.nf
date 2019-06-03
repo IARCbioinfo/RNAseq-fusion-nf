@@ -25,6 +25,7 @@ params.fastq_ext = "fq.gz"
 params.suffix1 = "_1"
 params.suffix2 = "_2"
 params.junction_suffix = "Chimeric.SJ.out.junction"
+params.junctions = null
 
 params.help = null
 
@@ -77,38 +78,43 @@ if (params.help) {
    log.info "help:             ${params.help}"
 }
 
-if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.size() > 0){
-       println "Junction files found, proceed with fusion genes discovery"
 
-// Gather files ending with _1 suffix
-   reads1 = Channel
-    .fromPath( params.input_folder+'/*'+params.suffix1+'.'+params.fastq_ext )
-    .map {  path -> [ path.name.replace("${params.suffix1}.${params.fastq_ext}",""), path ] }
+// Gather paired fastq files
+   println "${params.input_folder}/*_{$params.suffix1,$params.suffix2}.${params.fastq_ext}"
+   readPairs = Channel.fromFilePairs("${params.input_folder}/*_{1,2}.${params.fastq_ext}")
+                      .map {  row -> [ row[0], row[1][0], row[1][1] ] }
 
+   readPairs4print = Channel.fromFilePairs("${params.input_folder}/*_{1,2}.${params.fastq_ext}")
+                            .map {  row -> [ row[0], row[1][0], row[1][1] ] }
+				.subscribe { row -> println "${row}" }
 
 // Gather files ending with _2 suffix
-   reads2 = Channel
-    .fromPath( params.input_folder+'/*'+params.suffix2+'.'+params.fastq_ext )
-    .map {  path -> [ path.name.replace("${params.suffix2}.${params.fastq_ext}",""), path ] }
+//   reads2 = Channel
+//    .fromPath( params.input_folder+'/*'+params.suffix2+'.'+params.fastq_ext )
+//    .map {  path -> [ path.name.replace("${params.suffix2}.${params.fastq_ext}",""), path ] }
 
-// Gather files ending with junction
+   if(params.junctions){
+   printl "Gather STAR junction files"
+   if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.size() > 0){
+       println "Junction files found, proceed with fusion genes discovery"
+   }else{
+	println "ERROR: input folder contains no fastq files"; System.exit(1)
+   }
    junctions = Channel
     .fromPath( params.input_folder+'/*' +params.junction_suffix)
     .map {  path -> [ path.name.replace("STAR.","").replace(".${params.junction_suffix}",""), path ] }
 
 // Match the pairs on two channels having the same 'key' (name) and emit a new pair containing the expected files
-   input_triplet = reads1
-                     .phase(reads2)
-		     .map { pair1, pair2 -> [pair1[0], pair1[1], pair2[1] ] }
-
-   input_triplet = input_triplet.phase(junctions)
+   input_triplet = readPairs.phase(junctions)
    input_triplet = input_triplet
 		     .map { pairs, junction -> [ pairs[0],pairs[1], pairs[2], junction[1] ] }
-
-
-}else{
-       println "ERROR: input folder contains no fastq files"; System.exit(1)
+   }else{
+	println "Do not gather STAR junction files; STAR will be used for alignment"
+ 	input_triplet = readPairs.map { pairs -> [ pairs[0],pairs[1], pairs[2], 'NO_FILE' ] }
 }
+
+
+
 
 process STAR_Fusion {
 	cpus params.cpu
@@ -125,7 +131,12 @@ process STAR_Fusion {
 	publishDir "${params.output_folder}/${file_tag}", mode: 'copy'	
 
 	shell:
+	if(params.junctions){
+		SF_junction="-J "+junction+" "
+	}else{
+	        SF_junction=" "
+	}
     	'''
-	STAR-Fusion --genome_lib_dir !{params.CTAT_folder} -J !{junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct
+	STAR-Fusion --genome_lib_dir !{params.CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --CPU !{params.cpu}
     	'''
 }
