@@ -1,0 +1,8 @@
+name: rnaseq-fusion-nf
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - star-fusion=1.5.0
+  - fusion-inspector=1.3.1
