@@ -137,6 +137,6 @@ process STAR_Fusion {
 	        SF_junction=" "
 	}
     	'''
-	STAR-Fusion --genome_lib_dir !{params.CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --CPU !{params.cpu}
+	STAR-Fusion --genome_lib_dir !{params.CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
     	'''
 }
