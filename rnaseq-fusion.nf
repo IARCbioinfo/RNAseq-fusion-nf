@@ -31,7 +31,7 @@ params.help = null
 
 log.info ""
 log.info "--------------------------------------------------------"
-log.info "  <PROGRAM_NAME> <VERSION>: <SHORT DESCRIPTION>         "
+log.info "  rnaseq-fusion-nf v1.0: nextflow pipeline to run STAR-fusion "
 log.info "--------------------------------------------------------"
 log.info "Copyright (C) IARC/WHO"
 log.info "This program comes with ABSOLUTELY NO WARRANTY; for details see LICENSE"
@@ -42,7 +42,7 @@ log.info ""
 
 if (params.help) {
     log.info "--------------------------------------------------------"
-    log.info "  USAGE                                                 "
+    log.info "  USAGE nextflow run rnaseq-fusion-nf --input_folder fastq/ --CTAT_folder GRCh38_CTAT/                                                 "
     log.info "--------------------------------------------------------"
     log.info ""
     log.info "nextflow run iarcbioinfo/rnaseq-transcript-nf [-with-docker] [OPTIONS]"
@@ -61,7 +61,7 @@ if (params.help) {
     log.info '    --mem             INTEGER                 Size of memory used for mapping (in GB) (default: 2).' 
     log.info ""
     log.info "Flags:"
-    log.info "--<FLAG>                                                    <DESCRIPTION>"
+    log.info "--junctions          Option to use STAR junction files (default: null)."
     log.info ""
     exit 0
 } else {
@@ -75,6 +75,7 @@ if (params.help) {
    log.info "suffix1         = ${params.suffix1}"
    log.info "suffix2         = ${params.suffix2}"
    log.info "junction_suffix = ${params.junction_suffix}"
+   log.info "junctions       = ${params.junctions}"
    log.info "help:             ${params.help}"
 }
 
@@ -94,7 +95,7 @@ if (params.help) {
 //    .map {  path -> [ path.name.replace("${params.suffix2}.${params.fastq_ext}",""), path ] }
 
    if(params.junctions){
-   printl "Gather STAR junction files"
+   println "Gather STAR junction files"
    if ( file(params.input_folder).listFiles().findAll { it.name ==~ /.*junction/ }.size() > 0){
        println "Junction files found, proceed with fusion genes discovery"
    }else{
@@ -112,8 +113,6 @@ if (params.help) {
 	println "Do not gather STAR junction files; STAR will be used for alignment"
  	input_triplet = readPairs.map { pairs -> [ pairs[0],pairs[1], pairs[2], 'NO_FILE' ] }
 }
-
-
 
 
 process STAR_Fusion {
