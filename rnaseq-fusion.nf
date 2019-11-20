@@ -26,6 +26,7 @@ params.suffix1 = "_1"
 params.suffix2 = "_2"
 params.junction_suffix = "Chimeric.SJ.out.junction"
 params.junctions = null
+params.starfusion_path = ""
 
 params.help = null
 
@@ -122,7 +123,8 @@ process STAR_Fusion {
 
 	input:
 	set file_tag, file(pair1), file(pair2) , file(junction) from input_triplet
-	
+	file(CTAT_folder) from file(params.CTAT_folder)	
+
 	output:
 	file("FusionInspector*") into FIoutputs
 	file("star-fusion*") into SFoutputs
@@ -136,6 +138,6 @@ process STAR_Fusion {
 	        SF_junction=" "
 	}
     	'''
-	STAR-Fusion --genome_lib_dir !{params.CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
+	!{params.starfusion_path}STAR-Fusion --genome_lib_dir !{CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
     	'''
 }
