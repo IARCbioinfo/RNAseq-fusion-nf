@@ -86,9 +86,9 @@ if (params.help) {
    readPairs = Channel.fromFilePairs("${params.input_folder}/*_{1,2}.${params.fastq_ext}")
                       .map {  row -> [ row[0], row[1][0], row[1][1] ] }
 
-   readPairs4print = Channel.fromFilePairs("${params.input_folder}/*_{1,2}.${params.fastq_ext}")
-                            .map {  row -> [ row[0], row[1][0], row[1][1] ] }
-				.subscribe { row -> println "${row}" }
+   //readPairs4print = Channel.fromFilePairs("${params.input_folder}/*_{1,2}.${params.fastq_ext}")
+   //                         .map {  row -> [ row[0], row[1][0], row[1][1] ] }
+   //			.subscribe { row -> println "${row}" }
 
 // Gather files ending with _2 suffix
 //   reads2 = Channel
@@ -137,7 +137,7 @@ process STAR_Fusion {
 	}else{
 	        SF_junction=" "
 	}
-    	'''
-	!{params.starfusion_path}STAR-Fusion --genome_lib_dir !{CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
-    	'''
+    '''
+	!{params.starfusion_path}STAR-Fusion --genome_lib_dir $PWD/!{CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
+    '''
 }
