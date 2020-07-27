@@ -1,10 +1,10 @@
-################## BASE IMAGE ######################
-FROM nfcore/base
+################# BASE IMAGE #####################
+FROM continuumio/miniconda3:4.7.12
 
-################## METADATA ######################
+################## METADATA #######################
 
-LABEL base_image="nfcore/base"
-LABEL version="1.0"
+LABEL base_image="continuumio/miniconda3"
+LABEL version="4.7.12"
 LABEL software="rnaseq-fusion-nf"
 LABEL software.version="1.0"
 LABEL about.summary="Container image containing all requirements for fusion gene discovery pipeline"
@@ -14,8 +14,11 @@ LABEL about.license_file="http://github.com/IARCbioinfo/rnaseq-fusion-nf/LICENSE
 LABEL about.license="GNU-3.0"
 
 ################## MAINTAINER ######################
-MAINTAINER **alcalan** <**alcalan@fellows.iarc.fr**>
+MAINTAINER **nalcala** <**alcalan@iarc.fr**>
+
 
 ################## INSTALLATION ######################
 COPY environment.yml /
-RUN conda env update -n root -f /environment.yml && conda clean -a
+RUN apt-get update && apt-get install -y procps && apt-get clean -y
+RUN conda env create -n rnaseq-fusion-nf -f /environment.yml && conda clean -a
+ENV PATH /opt/conda/envs/rnaseq-fusion-nf/bin:$PATH
