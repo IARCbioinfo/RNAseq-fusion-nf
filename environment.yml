@@ -6,6 +6,4 @@ channels:
 dependencies:
   - star-fusion=1.8.1
   - star=2.7.2d
-  - trinity
   - python=3.6
-  - igv-reports

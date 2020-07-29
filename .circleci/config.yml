@@ -1,0 +1,35 @@
+version: 2.1
+#orbs:
+#  singularity: singularity/singularity@1.0.10
+
+jobs:
+  build:
+        machine: true
+        steps:
+                - checkout
+                - run: sudo apt-get install graphviz
+                #; sudo apt-get install libarchive-dev
+#                - run: sudo rm -rf /usr/local/go
+#                - run: cd ~ ; export VERSION=1.13 OS=linux ARCH=amd64; wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz; sudo tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz ; rm go$VERSION.$OS-$ARCH.tar.gz; sudo ln -s /usr/local/go/bin/go /usr/local/bin/
+#                - run: which go; go version; go env
+#                - run: cd ~ ; VERSION=3.6.0; wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz; tar -xzf singularity-${VERSION}.tar.gz; cd singularity; ./mconfig; make -C builddir; sudo make -C builddir install                         
+#                - run: cd ~ ; singularity pull quantiseq2.img shub://IARCbioinfo/quantiseq-nf:v1.1
+                - run: echo " docker.runOptions = '-u $(id -u):$(id -g)' " > ~/.nextflow/config
+                - run: cd ; nextflow run IARCbioinfo/RNAseq-nf -r v2.3 -profile docker --input_folder ~/data_test/BAM/ --output_folder BAM_realigned --ref_folder  ~/data_test/REF --gtf ~/data_test/REF/TP53_small.gtf --bed ~/data_test/BED/TP53_small.bed --cpu 2 --mem 4
+                - run: cd ~ ; wget -qO- get.nextflow.io | bash ; chmod 755 nextflow ; sudo ln -s ~/nextflow /usr/local/bin/ 
+                - run: cd ~ && git clone https://github.com/iarcbioinfo/data_test.git
+                - run: cd ; nextflow run ~/project/ --help
+                - run: cd ; nextflow run ~/project/ -profile docker --input_folder ~/data_test/FASTQ/ --output_folder quantif --fastq_ext fastq.gz --cpu 2 --mem 4 -with-dag dag_image.html
+                - run: cd ; nextflow run ~/project/ -profile docker --input_folder ~/data_test/FASTQ/ --output_folder quantif --fastq_ext fastq.gz --cpu 2 --mem 4 -with-dag dag_image.png
+                - run: cd ; cp ~/dag.* ~/project/.
+                - add_ssh_keys:
+                                fingerprints:
+                                        - "ee:4e:4a:c9:7a:5f:1e:ed:02:8d:07:22:68:12:16:e5"
+                - deploy:
+                        branch: [master, dev]
+                        command: chmod +x deploy.sh && ./deploy.sh
+
+workflows:
+  install_s_build_and_test:
+    jobs:
+      - build
