@@ -17,7 +17,8 @@ jobs:
 #                - run: cd ~ ; VERSION=3.6.0; wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz; tar -xzf singularity-${VERSION}.tar.gz; cd singularity; ./mconfig; make -C builddir; sudo make -C builddir install                         
 #                - run: cd ~ ; singularity pull quantiseq2.img shub://IARCbioinfo/quantiseq-nf:v1.1
                 - run: cd ~ && git clone https://github.com/iarcbioinfo/data_test.git
-                - run: cd ; nextflow run IARCbioinfo/RNAseq-nf -r v2.3 -profile docker --input_folder ~/data_test/BAM/ --output_folder BAM_realigned --ref_folder  ~/data_test/REF --gtf ~/data_test/REF/TP53_small.gtf --bed ~/data_test/BED/TP53_small.bed --cpu 2 --mem 4
+                - run: cd ~ && git clone -b v2.3 https://github.com/iarcbioinfo/RNAseq-nf.git
+                - run: cd ; nextflow run RNAseq-nf/ -profile docker --input_folder ~/data_test/BAM/ --output_folder BAM_realigned --ref_folder  ~/data_test/REF --gtf ~/data_test/REF/TP53_small.gtf --bed ~/data_test/BED/TP53_small.bed --cpu 2 --mem 4
                 - run: cd ; nextflow run ~/project/ --help
                 - run: cd ; wget https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play.tar.gz; tar xvf GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play.tar.gz
                 - run: cd ; docker pull trinityctat/starfusion:1.8.1
