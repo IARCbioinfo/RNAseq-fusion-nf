@@ -1,0 +1,8 @@
+name: rnaseq-fusion-nf
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - star-fusion=1.8.1
+  - python=3.6
