@@ -5,5 +5,4 @@ channels:
   - defaults
 dependencies:
   - star-fusion=1.8.1
-  - star=2.7.2d
   - python=3.6

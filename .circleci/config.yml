@@ -19,12 +19,14 @@ jobs:
                 - run: cd ~ ; wget -qO- get.nextflow.io | bash ; chmod 755 nextflow ; sudo ln -s ~/nextflow /usr/local/bin/ 
                 - run: cd ~ && git clone https://github.com/iarcbioinfo/data_test.git
                 - run: cd ; nextflow run ~/project/ --help
-                - run: cd ; nextflow run ~/project/ -profile docker --input_folder ~/data_test/FASTQ/ --output_folder quantif --fastq_ext fastq.gz --cpu 2 --mem 4 -with-dag dag_image.html
-                - run: cd ; nextflow run ~/project/ -profile docker --input_folder ~/data_test/FASTQ/ --output_folder quantif --fastq_ext fastq.gz --cpu 2 --mem 4 -with-dag dag_image.png
+                - run: cd ; wget https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play.tar.gz; tar xvf GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play.tar.gz
+                - run: cd ; docker pull trinityctat/starfusion:1.8.1
+                - run: cd ; nextflow run ~/project/ -with-docker trinityctat/starfusion:1.8.1 --input_folder ~/data_test/FASTQ/ --output_folder RNAseq-fusion-out --CTAT_folder ~/GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play/ctat_genome_lib_build_dir/ --fastq_ext fastq.gz --cpu 2 --mem 4 -with-dag dag.html
+                - run: cd ; nextflow run ~/project/ -with-docker trinityctat/starfusion:1.8.1 --input_folder ~/data_test/FASTQ/ --output_folder RNAseq-fusion-out --CTAT_folder ~/GRCh38_gencode_v33_CTAT_lib_Apr062020.plug-n-play/ctat_genome_lib_build_dir/ --fastq_ext fastq.gz --cpu 2 --mem 4 -resume -with-dag dag.png
                 - run: cd ; cp ~/dag.* ~/project/.
                 - add_ssh_keys:
                                 fingerprints:
-                                        - "ee:4e:4a:c9:7a:5f:1e:ed:02:8d:07:22:68:12:16:e5"
+                                        - "2d:55:7c:ec:4c:fc:32:25:ff:20:cb:08:a8:ee:e4:bc"
                 - deploy:
                         branch: [master, dev]
                         command: chmod +x deploy.sh && ./deploy.sh
