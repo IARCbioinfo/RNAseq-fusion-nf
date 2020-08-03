@@ -25,6 +25,7 @@ params.suffix1 = "_1"
 params.suffix2 = "_2"
 params.junction_suffix = "Chimeric.SJ.out.junction"
 params.junctions = null
+params.starfusion_path = "/usr/local/src/STAR-Fusion/STAR-Fusion"
 
 params.help = null
 
@@ -56,6 +57,7 @@ if (params.help) {
     log.info '    --suffix1         STRING                  Suffix of 1st element of fastq files pair (default: _1).'
     log.info '    --suffix2         STRING                  Suffix of 2nd element of fastq files pair (default: _2).'
     log.info '    --junction_suffix STRING                  Suffix of STAR chimeric junction files (default: Chimeric.SJ.out.junction).'
+    log.info '    --starfusion_path STRING                  Path to STAR-fusion executable (default: /usr/local/src/STAR-Fusion/STAR-Fusion for singularity image'
     log.info '    --cpu             INTEGER                 Number of cpu used by bwa mem and sambamba (default: 2).'
     log.info '    --mem             INTEGER                 Size of memory used for mapping (in GB) (default: 2).' 
     log.info ""
@@ -74,6 +76,7 @@ if (params.help) {
    log.info "suffix1         = ${params.suffix1}"
    log.info "suffix2         = ${params.suffix2}"
    log.info "junction_suffix = ${params.junction_suffix}"
+   log.info "starfusion_path = ${params.starfusion_path}"
    log.info "junctions       = ${params.junctions}"
    log.info "help:             ${params.help}"
 }
@@ -125,6 +128,6 @@ process STAR_Fusion {
 	        SF_junction=" "
 	}
     '''
-	STAR-Fusion --genome_lib_dir $PWD/!{CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
+	!{params.starfusion_path} --genome_lib_dir $PWD/!{CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
     '''
 }
