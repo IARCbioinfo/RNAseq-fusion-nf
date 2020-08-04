@@ -36,10 +36,10 @@ In addition, STAR-Fusion requires a [CTAT bundle](https://data.broadinstitute.or
 | --CTAT_folder   |. | Folder with STAR-Fusion bundle (CTAT) |
 
 
-
   * #### Optional
 | Name      | Default value | Description     |
 |-----------|---------------|-----------------|
+| --input_file  | NULL  | Input file (comma-separated) with 4 columns: SM(sample name), pair1 (path to fastq pair 1), pair2 (path to fastq pair 2), and junction (path to junction file) |
 | --output_folder   |   results_fusion | Output folder |
 | --fastq_ext       |   fq.gz    |            Extension of fastq files |
 | --suffix1         |  _1 |   Suffix of 1st element of fastq files pair |
@@ -49,6 +49,7 @@ In addition, STAR-Fusion requires a [CTAT bundle](https://data.broadinstitute.or
 | --cpu             |  2 |         Number of cpu used by bwa mem and sambamba |
 | --mem             |  2 |   Size of memory used for mapping (in GB)|
 
+Note: using the input_file mode allows to specify multiple fastq files for a given sample, that are merged during the alignment phase.
 
   * #### Flags
 
@@ -59,10 +60,11 @@ Flags are special parameters without value.
 | --junctions | Option to use STAR junction files already generated |
 | --help    | Display help |
 
+Note: when the --junctions option is not used, the junction column of the input file is ignored.
 
 ## Usage
   ```
-  nextflow run iarcbioinfo/RNAseq-fusion-nf -r v1.0 -profile singularity  --input_folder input --CTAT_folder CTAT --output_folder output
+  nextflow run iarcbioinfo/RNAseq-fusion-nf -r v1.1 -profile singularity  --input_folder input --CTAT_folder CTAT --output_folder output
   ```
   
 To run the pipeline without singularity just remove "-profile singularity"; you can also directly download a singularity image at https://data.broadinstitute.org/Trinity/CTAT_SINGULARITY/STAR-Fusion/ using the command `singularity pull https://data.broadinstitute.org/Trinity/CTAT_SINGULARITY/STAR-Fusion/star-fusion.v1.9.0.simg`. Alternatively, one can run the pipeline using a docker container (-profile docker) the conda receipe containing all required dependencies (-profile conda).
@@ -83,7 +85,7 @@ To run the pipeline without singularity just remove "-profile singularity"; you 
 
   | Name      | Email | Description     |
   |-----------|---------------|-----------------|
-  | Nicolas Alcala    |  alcalan@fellows.iarc.fr | Developer to contact for support |
+  | Nicolas Alcala    |  alcalan@iarc.fr | Developer to contact for support |
 
 ## References
 Haas, B. J., Dobin, A., Li, B., Stransky, N., Pochet, N., & Regev, A. (2019). Accuracy assessment of fusion transcript detection via read-mapping and de novo fusion transcript assembly-based methods. Genome biology, 20(1), 213.

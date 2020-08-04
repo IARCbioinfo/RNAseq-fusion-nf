@@ -20,9 +20,10 @@ jobs:
                 - run: cd ~ && git clone -b v2.3 https://github.com/iarcbioinfo/RNAseq-nf.git
                 - run: cd ; nextflow run RNAseq-nf/ -profile docker --input_folder ~/data_test/FASTQ/ --output_folder BAM_realigned --ref_folder  ~/data_test/REF --gtf ~/data_test/REF/TP53_small.gtf --bed ~/data_test/BED/TP53_small.bed --cpu 2 --mem 4
                 - run: cd ; nextflow run ~/project/ --help
-                - run: cd ; docker pull trinityctat/starfusion:1.8.1
-                - run: cd ; nextflow run ~/project/ -with-docker trinityctat/starfusion:1.8.1 --input_folder ~/data_test/FASTQ/ --output_folder RNAseq-fusion-out --CTAT_folder ~/data_test/REF/ctat_genome_lib_build_dir_TP53/ --fastq_ext fastq.gz --cpu 2 --mem 4 -with-dag dag.html
-                - run: cd ; nextflow run ~/project/ -with-docker trinityctat/starfusion:1.8.1 --input_folder ~/data_test/FASTQ/ --output_folder RNAseq-fusion-out --CTAT_folder ~/data_test/REF/ctat_genome_lib_build_dir_TP53/ --fastq_ext fastq.gz --cpu 2 --mem 4 -resume -with-dag dag.png
+                - run: cd ; docker pull trinityctat/starfusion:1.9.0
+                - run: cd ; nextflow run ~/project/ -with-docker trinityctat/starfusion:1.9.0 --input_folder ~/data_test/FASTQ/ --output_folder RNAseq-fusion-out --CTAT_folder ~/data_test/REF/ctat_genome_lib_build_dir_TP53/ --fastq_ext fastq.gz --cpu 2 --mem 4 -with-dag dag.html
+                - run: cd ; nextflow run ~/project/ -with-docker trinityctat/starfusion:1.9.0 --input_folder ~/data_test/FASTQ/ --output_folder RNAseq-fusion-out --CTAT_folder ~/data_test/REF/ctat_genome_lib_build_dir_TP53/ --fastq_ext fastq.gz --cpu 2 --mem 4 -resume -with-dag dag.png
+                - run: cd ; echo -e 'SM\tpair1\tpair2\tjunction\nNA06984\tdata_test/FASTQ/NA06984_T_1.fastq.gz\tdata_test/FASTQ/NA06984_T_2.fastq.gz\tnone\nNA06984_2RG\tdata_test/FASTQ/NA06984_T_RG1_1.fastq.gz\tdata_test/FASTQ/NA06984_T_RG1_2.fastq.gz\tnone\nNA06984_2RG\tdata_test/FASTQ/NA06984_T_RG2_1.fastq.gz\tdata_test/FASTQ/NA06984_T_RG2_2.fastq.gz\tnone' > input.txt ; nextflow run ~/project/ -with-docker trinityctat/starfusion:1.9.0 --input_file input.txt --output_folder RNAseq-fusion-out --CTAT_folder ~/data_test/REF/ctat_genome_lib_build_dir_TP53/ --fastq_ext fastq.gz --cpu 2 --mem 4
                 - run: cd ; cp ~/dag.* ~/project/.
                 - add_ssh_keys:
                                 fingerprints:
