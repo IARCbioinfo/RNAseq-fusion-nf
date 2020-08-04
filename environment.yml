@@ -4,5 +4,5 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - star-fusion=1.8.1
+  - star-fusion=1.9.0
   - python=3.6

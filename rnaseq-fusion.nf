@@ -17,6 +17,7 @@
 
 params.CTAT_folder = '.'
 params.input_folder = '.'
+params.input_file   = null
 params.output_folder= "results_fusion"
 params.mem  = 2
 params.cpu  = 2
@@ -31,7 +32,7 @@ params.help = null
 
 log.info ""
 log.info "--------------------------------------------------------"
-log.info "  rnaseq-fusion-nf v1.0: nextflow pipeline to run STAR-fusion "
+log.info "  rnaseq-fusion-nf v1.1: nextflow pipeline to run STAR-fusion "
 log.info "--------------------------------------------------------"
 log.info "Copyright (C) IARC/WHO"
 log.info "This program comes with ABSOLUTELY NO WARRANTY; for details see LICENSE"
@@ -42,16 +43,19 @@ log.info ""
 
 if (params.help) {
     log.info "--------------------------------------------------------"
-    log.info "  USAGE nextflow run rnaseq-fusion-nf --input_folder fastq/ --CTAT_folder GRCh38_CTAT/                                                 "
+    log.info "  USAGE            "
     log.info "--------------------------------------------------------"
     log.info ""
-    log.info "nextflow run iarcbioinfo/rnaseq-transcript-nf [-with-docker] [OPTIONS]"
+    log.info "nextflow run IARCbioinfo/RNAseq-fusion-nf --input_folder fastq/ --CTAT_folder GRCh38_CTAT/  [-with-docker] [OPTIONS]"
     log.info ""
     log.info "Mandatory arguments:"
     log.info '    --input_folder    FOLDER                  Folder containing fastq files and STAR junction files.'
     log.info '    --CTAT_folder     FOLDER                  Folder with STAR-Fusion bundle (CTAT).'
     log.info ""
     log.info "Optional arguments:"
+    log.info '    --input_file      STRING                  Input file (comma-separated) with 4 columns:'
+    log.info '                                              SM(sample name), pair1 (path to fastq pair 1), '
+    log.info '                                              pair2 (path to fastq pair 2), and junction (path to junction file).'
     log.info '    --output_folder   STRING                  Output folder (default: results_fusion).'
     log.info '    --fastq_ext       STRING                  Extension of fastq files (default: fq.gz).'
     log.info '    --suffix1         STRING                  Suffix of 1st element of fastq files pair (default: _1).'
@@ -62,12 +66,13 @@ if (params.help) {
     log.info '    --mem             INTEGER                 Size of memory used for mapping (in GB) (default: 2).' 
     log.info ""
     log.info "Flags:"
-    log.info "--junctions          Option to use STAR junction files (default: null)."
+    log.info "    --junctions                               Option to use STAR junction files (default: null)."
     log.info ""
     exit 0
 } else {
 /* Software information */
    log.info "input_folder    = ${params.input_folder}"
+   log.info "input_file      = ${params.input_file}"
    log.info "cpu             = ${params.cpu}"
    log.info "mem             = ${params.mem}"
    log.info "output_folder   = ${params.output_folder}"
@@ -83,6 +88,13 @@ if (params.help) {
 
 
 // Gather paired fastq files
+if(params.input_file){
+input_triplet = Channel.fromPath("${params.input_file}")
+			       .splitCsv(header: true, sep: '\t', strip: true)
+			       .map { row -> [row.SM , file(row.pair1), file(row.pair2), file(row.junction) ] }
+                   .groupTuple(by: 0)
+                   .map { row -> [row[0] , row[1], row[2], row[3][0] ] }
+}else{
    readPairs = Channel.fromFilePairs(params.input_folder +"/*{${params.suffix1},${params.suffix2}}" +'.'+ params.fastq_ext)
                       .map {  row -> [ row[0], row[1][0], row[1][1] ] }
 
@@ -103,8 +115,8 @@ if (params.help) {
    }else{
 	println "Do not gather STAR junction files; STAR will be used for alignment"
  	input_triplet = readPairs.map { pairs -> [ pairs[0],pairs[1], pairs[2], 'NO_FILE' ] }
+    }
 }
-
 
 process STAR_Fusion {
 	cpus params.cpu
@@ -127,7 +139,14 @@ process STAR_Fusion {
 	}else{
 	        SF_junction=" "
 	}
+    input_txt="${file_tag}\t${pair1[0]}\t${pair2[0]}"
+    if(pair1 instanceof List) {
+        for( i = 1; i < pair1.size(); i++){
+	        input_txt=input_txt+"\n${file_tag}\t${pair1[i]}\t${pair2[i]}"
+        }
+    }
     '''
-	!{params.starfusion_path} --genome_lib_dir $PWD/!{CTAT_folder} !{SF_junction} --left_fq !{pair1} --right_fq !{pair2} --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
+    echo '!{input_txt}' > input.txt
+	!{params.starfusion_path} --genome_lib_dir $PWD/!{CTAT_folder} !{SF_junction} --samples_file input.txt --output_dir . --FusionInspector validate --denovo_reconstruct --examine_coding_effect --CPU !{params.cpu}
     '''
 }
