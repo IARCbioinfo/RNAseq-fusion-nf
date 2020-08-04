@@ -13,7 +13,10 @@
    version="1.1"
    id="svg2"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="RNAseq-fusion-nf.svg">
+   sodipodi:docname="RNAseq-fusion-nf.svg"
+   inkscape:export-filename="/run/user/1000/gvfs/smb-share:server=shares.hpc.iarc.lan,share=data/gcs/mesomics/work/RNAseq/RNAseq-fusion-nf/RNAseq-fusion-nf.png"
+   inkscape:export-xdpi="200"
+   inkscape:export-ydpi="200">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -10155,7 +10158,9 @@
      d="M 471.88248,74.853236 470.9147,452.34208"
      id="path8149"
      inkscape:connector-curvature="0"
-     sodipodi:nodetypes="cc" />
+     sodipodi:nodetypes="cc"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200" />
   <g
      id="surface0-8"
      transform="translate(-1441.0767,361.82562)">
@@ -10191,7 +10196,9 @@
      inkscape:connector-curvature="0"
      id="path3336"
      d="m 249.48248,74.853236 -0.24194,25.491834 h 144.68573 v 115.62482"
-     style="fill:none;stroke:#808080;stroke-width:6.77759933;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:13.55519852, 13.55519852;stroke-dashoffset:0;stroke-opacity:1" />
+     style="fill:none;stroke:#808080;stroke-width:6.77759933;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:13.55519852, 13.55519852;stroke-dashoffset:0;stroke-opacity:1"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200" />
   <rect
      style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.96860027;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="rect3166-59-0-7"
@@ -10200,13 +10207,17 @@
      x="138.54942"
      y="-677.22992"
      ry="26.895021"
-     transform="rotate(90)" />
+     transform="rotate(90)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200" />
   <text
      id="text3757-3"
      y="172.79648"
      x="471.68924"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-     xml:space="preserve"><tspan
+     xml:space="preserve"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200"><tspan
        id="tspan4922"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:24.8685627px;line-height:1.25;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L';text-align:center;text-anchor:middle"
        y="172.79648"
@@ -10222,7 +10233,9 @@
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
      x="469.26987"
      y="484.21124"
-     id="text3757-3-4-3"><tspan
+     id="text3757-3-4-3"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200"><tspan
        sodipodi:role="line"
        x="469.26987"
        y="484.21124"
@@ -10243,7 +10256,9 @@
   </g>
   <g
      id="g5445"
-     transform="matrix(0.54086744,0,0,0.54086744,-239.52749,-261.71678)">
+     transform="matrix(0.54086744,0,0,0.54086744,-239.52749,-261.71678)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200">
     <g
        id="g5474">
       <g
@@ -10317,7 +10332,9 @@
   </g>
   <g
      id="g43864"
-     transform="translate(148.39531,-91.750824)">
+     transform="translate(148.39531,-91.750824)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200">
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -10379,7 +10396,9 @@
   </g>
   <g
      id="g10888"
-     transform="matrix(0.77154443,0,0,0.77154443,77.117405,166.39825)">
+     transform="matrix(0.77154443,0,0,0.77154443,77.117405,166.39825)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200">
     <text
        id="text5427-4"
        y="-188.02905"
@@ -10401,7 +10420,9 @@
      xml:space="preserve"
      id="flowRoot8044"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     transform="translate(-192.39238,-49.287098)"><flowRegion
+     transform="translate(-192.39238,-49.287098)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200"><flowRegion
        id="flowRegion8046"><rect
          id="rect8048"
          width="137.07683"
@@ -10414,7 +10435,9 @@
      xml:space="preserve"
      id="flowRoot8052"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     transform="translate(-192.39238,-49.287098)"><flowRegion
+     transform="translate(-192.39238,-49.287098)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200"><flowRegion
        id="flowRegion8054"><rect
          id="rect8056"
          width="171.82869"
@@ -10441,7 +10464,9 @@
      style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      x="366.26541"
      y="30.686584"
-     id="text13967"><tspan
+     id="text13967"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200"><tspan
        sodipodi:role="line"
        id="tspan13969"
        x="366.26541"
@@ -10449,7 +10474,9 @@
        style="font-size:31.99999619px;line-height:1.25"> </tspan></text>
   <g
      id="g14063"
-     transform="translate(171.70543,97.049176)">
+     transform="translate(171.70543,97.049176)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200">
     <g
        transform="translate(-174.4,0)"
        id="g14075">
@@ -10652,7 +10679,9 @@
   </g>
   <g
      transform="matrix(0.77154443,0,0,0.77154443,-145.28257,166.39825)"
-     id="g3332">
+     id="g3332"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200">
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -10672,7 +10701,9 @@
   </g>
   <g
      id="g3344"
-     transform="matrix(0.77154443,0,0,0.77154443,-33.28258,246.39825)">
+     transform="matrix(0.77154443,0,0,0.77154443,-33.28258,246.39825)"
+     inkscape:export-xdpi="200"
+     inkscape:export-ydpi="200">
     <text
        id="text3342"
        y="-152.7751"
