@@ -1,0 +1,72 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/IARCbioinfo/RNAseq-fusion-nf/master/nextflow_schema.json",
+    "title": "RNAseq-fusion-nf pipeline parameters",
+    "description": "This pipeline performs fusion-gene discovery from junction reads identified by STAR during alignment.",
+    "type": "object",
+    "properties": {
+        "input_folder": {
+            "type": "string",
+            "description": "Folder containing fastq files and STAR junction files",
+            "default": "."
+        },
+        "input_file": {
+            "type": "string",
+            "description": "Input file (comma-separated) with 4 columns: SM(sample name), pair1 (path to fastq pair 1), pair2 (path to fastq pair 2), and junction (path to junction file)",
+            "default": "null"
+        },
+        "CTAT_folder": {
+            "type": "string",
+            "default": ".",
+            "description": "Folder with STAR-Fusion bundle (CTAT)"
+        },
+        "output_folder": {
+            "type": "string",
+            "description": "Output folder",
+            "default": "results_fusion"
+        },
+        "fastq_ext": {
+            "type": "string",
+            "description": "Extension of fastq files",
+            "default": "fq.gz"
+        },
+        "suffix1": {
+            "type": "string",
+            "description": "Suffix of 1st element of fastq files pair",
+            "default": "_1"
+        },
+        "suffix2": {
+            "type": "string",
+            "description": "Suffix of 2nd element of fastq files pair",
+            "default": "_2"
+        },
+        "junction_suffix": {
+            "type": "string",
+            "description": "Suffix of STAR chimeric junction files",
+            "default": "Chimeric.SJ.out.junction"
+        },
+        "starfusion_path": {
+            "type": "string",
+            "description": "Path to STAR-fusion executable; note that the default is set to the location in the singularity container",
+            "default": "/usr/local/src/STAR-Fusion/STAR-Fusion"
+        },
+        "cpu": {
+            "type": "integer",
+            "default": "2",
+            "description": "Number of cpu used by bwa mem and sambamba"
+        },
+        "mem": {
+            "type": "integer",
+            "default": "2",
+            "description": "Size of memory used for mapping (in GB)"
+        },
+        "junctions": {
+            "type": "boolean",
+            "description": "Option to use STAR junction files already generated"
+        },
+        "help": {
+            "type": "boolean",
+            "description": "Display help"
+        }
+    }
+}
