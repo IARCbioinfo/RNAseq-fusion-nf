@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/IARCbioinfo/RNAseq-fusion-nf/master/nextflow_schema.json",
-    "title": "IARCbionfo RNAseq-fusion-nf pipeline parameters",
+    "title": "IARCbioinfo RNAseq-fusion-nf pipeline parameters",
     "description": "This pipeline performs fusion-gene discovery from junction reads identified by STAR during alignment.",
     "type": "object",
     "definitions": {
