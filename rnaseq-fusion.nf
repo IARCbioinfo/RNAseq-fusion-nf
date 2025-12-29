@@ -136,7 +136,7 @@ process STAR_FUSION {
 
 workflow {
 
-    Channel input_triplet
+    def input_triplet
 
     if (params.input_file) {
 
