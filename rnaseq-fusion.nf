@@ -1,25 +1,15 @@
 #!/usr/bin/env nextflow
+
+// Copyright (C) 2026 IARC/WHO
+// This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+// See the GNU General Public License for more details <http://www.gnu.org/licenses/>.
+
 nextflow.enable.dsl = 2
 
-// Copyright (C) 2017 IARC/WHO
-
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-/* ============================
- * PARAMETERS
- * ============================ */
+// ============================
+// PARAMETERS
+// ============================
 
 params.CTAT_folder      = '.'
 params.input_folder     = '.'
@@ -35,6 +25,68 @@ params.junctions        = null
 params.starfusion_path  = '/usr/local/src/STAR-Fusion/STAR-Fusion'
 params.help             = null
 
+//Header for the IARC tools - logo generated using the following page : http://patorjk.com/software/taag  (ANSI logo generator)
+def IARC_Header (){
+     return  """
+#################################################################################
+# ██╗ █████╗ ██████╗  ██████╗██████╗ ██╗ ██████╗ ██╗███╗   ██╗███████╗ ██████╗  #
+# ██║██╔══██╗██╔══██╗██╔════╝██╔══██╗██║██╔═══██╗██║████╗  ██║██╔════╝██╔═══██╗ #
+# ██║███████║██████╔╝██║     ██████╔╝██║██║   ██║██║██╔██╗ ██║█████╗  ██║   ██║ #
+# ██║██╔══██║██╔══██╗██║     ██╔══██╗██║██║   ██║██║██║╚██╗██║██╔══╝  ██║   ██║ #
+# ██║██║  ██║██║  ██║╚██████╗██████╔╝██║╚██████╔╝██║██║ ╚████║██║     ╚██████╔╝ #
+# ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═════╝ ╚═╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝      ╚═════╝  #
+# Nextflow pipelines for cancer genomics.########################################
+"""
+}
+
+/* ============================
+ * PROCESS
+ * ============================ */
+
+process STAR_FUSION {
+
+    cpus params.cpu
+    memory "${params.mem}G"
+    tag { sample_id }
+
+    input:
+    tuple val(sample_id), path(pair1), path(pair2), path(junction)
+    path CTAT_folder
+
+    output:
+    path "FusionInspector*", emit: fi
+    path "star-fusion*", emit: sf
+
+    publishDir "${params.output_folder}/${sample_id}", mode: 'copy'
+
+    script:
+    def sf_junction = params.junctions ? "-J ${junction}" : ""
+    """
+    input_txt="${sample_id}\t${pair1}\t${pair2}"
+
+    echo -e "\$input_txt" > input.txt
+
+    ${params.starfusion_path} \
+        --genome_lib_dir \$PWD/${CTAT_folder} \
+        ${sf_junction} \
+        --samples_file input.txt \
+        --output_dir . \
+        --FusionInspector validate \
+        --denovo_reconstruct \
+        --examine_coding_effect \
+        --CPU ${params.cpu}
+    """
+}
+
+/* ============================
+ * WORKFLOW
+ * ============================ */
+
+workflow {
+  		log.info IARC_Header()
+// --------------------------------------------------
+// INFO / HELP
+// --------------------------------------------------
 log.info ""
 log.info "--------------------------------------------------------"
 log.info "  rnaseq-fusion-nf v1.1: nextflow pipeline to run STAR-fusion "
@@ -91,50 +143,7 @@ if (params.help) {
    log.info "help:             ${params.help}"
 }
 
-/* ============================
- * PROCESS
- * ============================ */
-
-process STAR_FUSION {
-
-    cpus params.cpu
-    memory "${params.mem}G"
-    tag { sample_id }
-
-    input:
-    tuple val(sample_id), path(pair1), path(pair2), path(junction)
-    path CTAT_folder
-
-    output:
-    path "FusionInspector*", emit: fi
-    path "star-fusion*", emit: sf
-
-    publishDir "${params.output_folder}/${sample_id}", mode: 'copy'
-
-    script:
-    def sf_junction = params.junctions ? "-J ${junction}" : ""
-    """
-    input_txt="${sample_id}\t${pair1}\t${pair2}"
-
-    echo -e "\$input_txt" > input.txt
-
-    ${params.starfusion_path} \
-        --genome_lib_dir \$PWD/${CTAT_folder} \
-        ${sf_junction} \
-        --samples_file input.txt \
-        --output_dir . \
-        --FusionInspector validate \
-        --denovo_reconstruct \
-        --examine_coding_effect \
-        --CPU ${params.cpu}
-    """
-}
-
-/* ============================
- * WORKFLOW
- * ============================ */
-
-workflow {
+// Run process STAR_FUSION
 
     def input_triplet
 
